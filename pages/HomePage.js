@@ -34,17 +34,19 @@ class HomePage extends BasePage {
     if (!items.length) return;
     await browser.execute((el) => el.scrollIntoView({ block: 'center' }), items[0]);
     await browser.pause(500);
-    await browser.action('pointer')
-      .move({ origin: items[0] })
-      .perform();
+    await items[0].moveTo();
+    await browser.execute((el) => {
+      el.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+    }, items[0]);
+    await browser.pause(300);
     const btns = await this.addToCartOverlayBtns;
     if (btns.length) {
+      await btns[0].waitForClickable({ timeout: 5000 });
       await btns[0].click();
     }
     try {
-      const continueBtn = await this.modalContinueBtn;
-      await continueBtn.waitForDisplayed({ timeout: 3000 });
-      await continueBtn.click();
+      await this.modalContinueBtn.waitForDisplayed({ timeout: 3000 });
+      await this.modalContinueBtn.click();
     } catch {
       // no modal, continue
     }
