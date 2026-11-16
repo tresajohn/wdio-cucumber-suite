@@ -23,8 +23,7 @@ exports.config = {
   connectionRetryCount: 3,
 
   services: [
-    ['chromedriver', {
-      detectChromeVersion: true,
+    ['selenium-standalone', {
       logPath: './logs/'
     }]
   ],
