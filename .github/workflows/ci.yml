@@ -51,9 +51,12 @@ jobs:
           path: allure-report/
           retention-days: 14
 
-      - name: Deploy report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main' && always()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
+          path: allure-report/
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        if: github.ref == 'refs/heads/main' && always()
