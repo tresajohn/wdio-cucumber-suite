@@ -12,6 +12,7 @@ class LoginPage extends BasePage {
   get signupError() { return $("//p[contains(text(),'Email Address already exist')]"); }
 
   async open() {
+    await browser.deleteCookies();
     await super.open('/login');
   }
 
