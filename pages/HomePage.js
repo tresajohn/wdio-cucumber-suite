@@ -16,7 +16,11 @@ class HomePage extends BasePage {
     await this.searchInput.waitForDisplayed({ timeout: 15000 });
     await this.searchInput.setValue(keyword);
     await this.searchBtn.click();
-    await browser.pause(2000);
+    await browser.waitUntil(
+      async () => (await browser.getUrl()).includes('search'),
+      { timeout: 10000, interval: 500 }
+    );
+    await this._dismissOverlay();
   }
 
   async getProductNames() {
@@ -33,17 +37,11 @@ class HomePage extends BasePage {
     const items = await this.productItems;
     if (!items.length) return;
     await browser.execute((el) => el.scrollIntoView({ block: 'center' }), items[0]);
-    await browser.pause(500);
-    await items[0].moveTo();
-    await browser.execute((el) => {
-      el.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
-    }, items[0]);
     await browser.pause(300);
-    const btns = await this.addToCartOverlayBtns;
-    if (btns.length) {
-      await btns[0].waitForClickable({ timeout: 5000 });
-      await btns[0].click();
-    }
+    await browser.execute((wrapper) => {
+      const btn = wrapper.querySelector('.add-to-cart');
+      if (btn) btn.click();
+    }, items[0]);
     try {
       await this.modalContinueBtn.waitForDisplayed({ timeout: 3000 });
       await this.modalContinueBtn.click();
