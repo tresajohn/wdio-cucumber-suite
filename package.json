@@ -4,6 +4,7 @@
   "description": "WebdriverIO 8 + Cucumber BDD E2E suite for automationexercise.com",
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/patch-logger.mjs",
     "test": "wdio run wdio.conf.js",
     "test:headless": "HEADLESS=true wdio run wdio.conf.js",
     "report": "npx allure generate allure-results --clean -o allure-report",
